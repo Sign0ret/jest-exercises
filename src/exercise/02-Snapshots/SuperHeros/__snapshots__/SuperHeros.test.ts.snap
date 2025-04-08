@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SuperHeros Testing should match the snapshot for an array of flying heros 1`] = `
+[
+  {
+    "name": "Superman",
+    "power": [
+      "Fly",
+      "Super Strength",
+    ],
+  },
+  {
+    "name": "IronMan",
+    "power": [
+      "Intelligence",
+      "Technology",
+      "Fly",
+      "Billionaire",
+    ],
+  },
+  {
+    "name": "GreenLantern",
+    "power": [
+      "Energy Manipulation",
+      "Fly",
+    ],
+  },
+]
+`;
