@@ -22,62 +22,61 @@ Here's a simple example of how to use this:
 */
 
 // javascript
-import { render, fireEvent, screen } from "@testing-library/react";
 
-test("it works", () => {
-  const { container } = render(<Example />);
-  // container is the div that your component has been mounted onto.
-
-  const input = container.querySelector("input");
-  fireEvent.mouseEnter(input); // fires a mouseEnter event on the input
-
-  screen.debug(); // logs the current state of the DOM (with syntax highlighting!)
-});
-
-/*
-React Testing Library has the following automatic features:
-- It automatically cleans up the DOM after each test. This means that you
+// test("it works", () => {
+  //   const { container } = render(<Example />);
+  //   // container is the div that your component has been mounted onto.
+  
+  //   const input = container.querySelector("input");
+  //   fireEvent.mouseEnter(input); // fires a mouseEnter event on the input
+  
+  //   screen.debug(); // logs the current state of the DOM (with syntax highlighting!)
+  // });
+  
+  /*
+  React Testing Library has the following automatic features:
+  - It automatically cleans up the DOM after each test. This means that you
   don't have to worry about cleaning up the DOM after each test. This is a
   good thing!
-- It automatically wraps your tests in `act`. This means that you don't
-    have to worry about wrapping your tests in `act`. This is a good thing!
-- It automatically provides you with a `screen` object that contains
+  - It automatically wraps your tests in `act`. This means that you don't
+  have to worry about wrapping your tests in `act`. This is a good thing!
+  - It automatically provides you with a `screen` object that contains
   methods for querying the DOM. This means that you don't have to worry
   about querying the DOM. This is a good thing!
-- It automatically provides you with a `fireEvent` object that contains
+  - It automatically provides you with a `fireEvent` object that contains
   methods for firing events. This means that you don't have to worry about
   firing events. This is a good thing!
-
-## Exercise
-
-In this exercise, we're going to refactor the test of exercise 03 using React
-Testing Library does for us. The emoji should guide you pretty well on this one
-so I'll let you have at it!
-
-
-// Remove this. React Testing Library does this automatically!
-beforeEach(() => {
-  document.body.innerHTML = ''
-})
-
-test('counter increments and decrements when the buttons are clicked', () => {
-  // Remove these two lines, React Testing Library will create the div for you
-  const div = document.createElement('div')
-  document.body.append(div)
-
-  // swap createRoot and root.render with React Testing Library's render
-  // Note that React Testing Library's render doesn't need you to pass a `div`
-  // so you only need to pass one argument. render returns an object with a
-  // bunch of utilities on it. For now, let's just grab `container` which is
-  // the div that React Testing Library creates for us.
-  // const {container} = render(<Counter />)
-  const root = createRoot(div)
-  act(() => root.render(<Counter />))
-
-  // instead of `div` here you'll want to use the `container` you get back
-  // from React Testing Library
-  const [decrement, increment] = div.querySelectorAll('button')
-  const message = div.firstChild.querySelector('div')
+  
+  ## Exercise
+  
+  In this exercise, we're going to refactor the test of exercise 03 using React
+  Testing Library does for us. The emoji should guide you pretty well on this one
+  so I'll let you have at it!
+  
+  
+  // Remove this. React Testing Library does this automatically!
+  beforeEach(() => {
+    document.body.innerHTML = ''
+    })
+    
+    test('counter increments and decrements when the buttons are clicked', () => {
+      // Remove these two lines, React Testing Library will create the div for you
+      const div = document.createElement('div')
+      document.body.append(div)
+      
+      // swap createRoot and root.render with React Testing Library's render
+      // Note that React Testing Library's render doesn't need you to pass a `div`
+      // so you only need to pass one argument. render returns an object with a
+      // bunch of utilities on it. For now, let's just grab `container` which is
+      // the div that React Testing Library creates for us.
+      // const {container} = render(<Counter />)
+      const root = createRoot(div)
+      act(() => root.render(<Counter />))
+      
+      // instead of `div` here you'll want to use the `container` you get back
+      // from React Testing Library
+      const [decrement, increment] = div.querySelectorAll('button')
+      const message = div.firstChild.querySelector('div')
 
   expect(message.textContent).toBe('Current count: 0')
 
@@ -87,17 +86,42 @@ test('counter increments and decrements when the buttons are clicked', () => {
     bubbles: true,
     cancelable: true,
     button: 0,
-  })
-  act(() => increment.dispatchEvent(incrementClickEvent))
-  expect(message.textContent).toBe('Current count: 1')
-  const decrementClickEvent = new MouseEvent('click', {
-    bubbles: true,
-    cancelable: true,
-    button: 0,
+    })
+    act(() => increment.dispatchEvent(incrementClickEvent))
+    expect(message.textContent).toBe('Current count: 1')
+    const decrementClickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
   })
   act(() => decrement.dispatchEvent(decrementClickEvent))
   expect(message.textContent).toBe('Current count: 0')
+  })
+  
+  */
+ 
+ import React from "react";
+ import { render, fireEvent, screen } from "@testing-library/react";
+ import Counter from "../03-ReactDom/Counter";
+ 
+ describe('Render counter', () => {
+  test('counter increments and decrements when the buttons are clicked', () => {
+    const { container } = render(<Counter/>)
+
+    const [increment, decrement] = container.querySelectorAll('button')
+    const message = (container.firstChild as HTMLElement).querySelector('h1')
+    // Expect the message.textContent toBe 'Current count: 0'
+    expect(message!.textContent).toBe("Counter: 0")
+    // Click the increment button (act(() => increment.click()))
+    fireEvent.click(increment)
+    // Assert the message.textContent
+    expect(message!.textContent).toBe("Counter: 1")
+    // Click the decrement button (act(() => decrement.click()))
+    fireEvent.click(decrement)
+    // Assert the message.textContent
+    expect(message!.textContent).toBe("Counter: 0")
+    // Cleanup by removing the div from the page (div.remove())
+    // Ff you don't cleanup, then it could impact other tests and/or cause a memory leak
+    screen.debug();
+  })
 })
-
-
-*/
