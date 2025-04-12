@@ -19,7 +19,7 @@ describe('Render login', () => {
       });
 
       fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-        // Verify submission
+      
   expect(handleSubmit).toHaveBeenCalledTimes(1);
   expect(handleSubmit).toHaveBeenCalledWith({
     username: 'testuser',
