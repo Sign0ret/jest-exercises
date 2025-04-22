@@ -1,8 +1,7 @@
 import * as React from "react";
 import Login from "./Login";
 import Spinner from "./spinner";
-import "whatwg-fetch";
-
+import { fetch } from "whatwg-fetch";
 
 function formSubmissionReducer(state, action) {
   switch (action.type) {
