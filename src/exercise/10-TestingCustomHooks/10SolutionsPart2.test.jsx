@@ -1,55 +1,51 @@
-// 10SolutionsPart2.test.jsx
 import React from "react";
-import { render, screen, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import useCounter from "../sharedComponent/useCounter"; // ajusta la ruta si es necesario
+import { render, act, cleanup } from "@testing-library/react";
+import useCounter from "../sharedComponent/useCounter"; // adjust path if needed
 
-// Componente de prueba que usa el hook
-function UseCounterHook({ initialCount = 0, step = 1 }) {
-  const { count, increment, decrement } = useCounter({ initialCount, step });
-  return (
-    <div>
-      <h1 data-testid="count">{count}</h1>
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
-    </div>
-  );
+let result
+function TestComponent(props) {
+  result = useCounter(props);
+  return null;
 }
 
-describe("useCounter hook via UseCounterHook component", () => {
+describe("useCounter hook tested directly via TestComponent", () => {
   beforeEach(() => {
     cleanup();
+    result = { count: 0, increment: () => {}, decrement: () => {} };
   });
 
-  it("starts at 0 by default and increments / decrements by 1", async () => {
-    const user = userEvent.setup();
-    render(<UseCounterHook />);
+  it("starts at 0 by default and increments / decrements by 1", () => {
+    render(<TestComponent />);
 
-    // valor inicial
-    expect(screen.getByTestId("count").textContent).toBe("0");
+    // initial count
+    expect(result.count).toBe(0);
 
-    // incrementa
-    await user.click(screen.getByRole("button", { name: "Increment" }));
-    expect(screen.getByTestId("count").textContent).toBe("1");
+    // increment
+    act(() => {
+      result.increment();
+    });
+    expect(result.count).toBe(1);
 
-    // decrementa
-    await user.click(screen.getByRole("button", { name: "Decrement" }));
-    expect(screen.getByTestId("count").textContent).toBe("0");
+    // decrement
+    act(() => {
+      result.decrement();
+    });
+    expect(result.count).toBe(0);
   });
 
-  it("accepts an initialCount and custom step", async () => {
-    const user = userEvent.setup();
-    render(<UseCounterHook initialCount={5} step={2} />);
+  it("accepts an initialCount and custom step", () => {
+    render(<TestComponent initialCount={10} step={5} />);
 
-    // inicia en el initialCount dado
-    expect(screen.getByTestId("count").textContent).toBe("5");
+    expect(result.count).toBe(10);
 
-    // incrementa por step (2)
-    await user.click(screen.getByRole("button", { name: "Increment" }));
-    expect(screen.getByTestId("count").textContent).toBe("7");
+    act(() => {
+      result.increment();
+    });
+    expect(result.count).toBe(15);
 
-    // decrementa por step (2)
-    await user.click(screen.getByRole("button", { name: "Decrement" }));
-    expect(screen.getByTestId("count").textContent).toBe("5");
+    act(() => {
+      result.decrement();
+    });
+    expect(result.count).toBe(10);
   });
 });
